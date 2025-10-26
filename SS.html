@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auto Render Activator</title>
+  <style>
+    body { font-family: system-ui, sans-serif; text-align: center; padding: 2rem; background: #fafafa; }
+    #status { margin-top: 1rem; font-size: 1rem; color: #333; }
+  </style>
+</head>
+<body>
+  <h2>Render Keep-Alive Script</h2>
+  <p>This page automatically pings your Render app to keep it active.</p>
+  <p id="status">Starting...</p>
+
+<script>
+(() => {
+  const URL_TO_PING = "https://sno-relax-server.onrender.com"; 
+  const MINUTES = 5; // ← change this to how often you want (in minutes)
+  const INTERVAL = MINUTES * 60 * 1000;
+  const statusEl = document.getElementById("status");
+
+  async function pingServer() {
+    const start = new Date();
+    try {
+      const res = await fetch(URL_TO_PING + "?t=" + Date.now(), { mode: "no-cors" });
+      const ms = new Date() - start;
+      statusEl.textContent = `Pinged at ${new Date().toLocaleTimeString()} ✅ (${ms}ms)`;
+      console.log("Ping successful:", res);
+    } catch (err) {
+      statusEl.textContent = `Ping failed at ${new Date().toLocaleTimeString()} ❌`;
+      console.error("Ping failed:", err);
+    }
+  }
+
+  // Start immediately
+  pingServer();
+
+  // Then repeat every X minutes
+  setInterval(pingServer, INTERVAL);
+})();
+</script>
+</body>
+</html>
