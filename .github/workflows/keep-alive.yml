@@ -1,0 +1,17 @@
+name: Keep Render Alive
+
+on:
+  schedule:
+    # Runs every 10 minutes — adjust as you like (*/5 = every 5 minutes)
+    - cron: "*/10 * * * *"
+  workflow_dispatch:  # allows manual run from GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render App
+        run: |
+          echo "Pinging Render app to keep it awake..."
+          curl -s -o /dev/null -w "%{http_code}" https://sno-relax-server.onrender.com
+          echo "✅ Ping sent at $(date)"
